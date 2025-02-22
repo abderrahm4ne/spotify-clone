@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+body{
+  background-color: rgb(0, 0, 0);
+}
+
+*{
+  box-sizing: border-box;
+  font-family:Inria Sans;
+}
+
+button:hover{
+  cursor: pointer;
+}
+
+#likedsongs{
+    background-image: linear-gradient(rgb(28, 28, 236) 30%, rgb(228, 229, 240) ) ;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+}
+
+#containerOfLikedSongs:hover{
+  background-color: #4d4c4c;
+}
+
+#bookedSongs{
+  background-color: rgb(64, 117, 64);
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+}
+
+#containerofBookedSongs:hover{
+  background-color: #4d4c4c;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(122, 86, 86);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(180, 144, 144);
+}
+
