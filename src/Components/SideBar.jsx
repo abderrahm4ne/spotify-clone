@@ -1,5 +1,6 @@
 import SearchBar from "./toChange/SearchBar";
 import { useEffect, useState, useRef } from "react";
+import { gsap } from "gsap"
 
 function SideBar({setSideBarWidth, sideBarWidth}){
     const [isSearch , setIsSearch] = useState(true);
@@ -10,6 +11,7 @@ function SideBar({setSideBarWidth, sideBarWidth}){
     const playlistInputRef = useRef(null);
     const adderButton = useRef(null);
     const divRef = useRef(null);
+    const searchBarRef = useRef(null)
 
     const handleClickOutSide = (e) => {
         if(playlistInputRef.current && !playlistInputRef.current.contains(e.target) && !adderButton.current.contains(e.target)){
@@ -54,10 +56,10 @@ function SideBar({setSideBarWidth, sideBarWidth}){
 
     const handleCreatePlayList = () => {
             setPlaylists([...playlists, {title : 'MyPlaylist', songs: [] }])
-        }
+    }
 
-        // adjust the big div width
-        useEffect(() => {
+    // adjust the big div width
+    useEffect(() => {
             const resizeObserver = new ResizeObserver(entries => {
               for (let entry of entries) {
                 const width = entry.contentRect.width;
@@ -67,7 +69,7 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                     
                 } else {
                     entry.target.classList.add("flex-row");
-                    entry.target.classList.add("flex-col");
+                    entry.target.classList.remove("flex-col");
                       
                 }
               }
@@ -82,11 +84,34 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                 resizeObserver.unobserve(divRef.current);
               }
             };
-          }, []);
+    }, []);
 
-          const handleDynamicWidth = () => {
-            setSideBarWidth(sideBarWidth <= '450px' ? "700px" : "450px")
-          }
+    const handleDynamicWidth = () => {
+        setSideBarWidth(sideBarWidth === '450px' ? "700px" : "450px")
+    }
+
+    useEffect(() => {
+        if(searchBarRef.current){
+            if(!isSearch){
+                gsap.set(searchBarRef.current, { display: "block" })
+                gsap.fromTo(searchBarRef.current,
+                    {x:-20, opacity:0},
+                    {x:0, opacity: 1, duration:0.25, ease: "power2.out"}
+                )   
+            }
+            else{
+                gsap.to(searchBarRef.current, {
+                    x: -20,
+                    opacity: 0,
+                    duration: 0.25,
+                    ease: "power2.in", // Fixed ease name
+                    onComplete: () => {
+                      searchBarRef.current.style.display = "none"; // Hide after animation
+                    },
+                  });
+            }
+        }
+    },[isSearch])
             
           
     return(
@@ -133,17 +158,17 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                 <div className=" text-white text-xg flex-nowrap px-2 mt-2">
                 <Categories />
                 </div>
-                <div className="flex flex-row items-center justify-between px-2  gap-4">
+                <div className="flex flex-row items-center justify-between px-2  gap-3">
                 <div className="flex flex-row items-center">
-                    <button onClick={() => 
+                    <button style={{width:'45px'}} onClick={() => 
                         setIsSearch(prev => !prev)
                     }   className="p-2"
 
                     >
                         <img src="src/assets/search.svg" alt="search" className="w-6" />
                     </button>
-
-                    {<SearchBar hidden={isSearch} />}
+                        {<SearchBar ref={searchBarRef}/>}
+                    
                 </div>
                     
                     

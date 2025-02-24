@@ -7,7 +7,7 @@ import HomePage from './Components/HomePage';
 
 function App() {
     
-    const [sideBarWidth, setSideBarWidth] = useState('24%')
+    const [sideBarWidth, setSideBarWidth] = useState('450px')
   return(
     <div className='h-screen w-[100%] px-1'>
       <div className='h-[8%]'>
