@@ -96,7 +96,7 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                 gsap.set(searchBarRef.current, { display: "block" })
                 gsap.fromTo(searchBarRef.current,
                     {x:-20, opacity:0},
-                    {x:0, opacity: 1, duration:0.25, ease: "power2.out"}
+                    {x:0, opacity: 1, duration:0.25, ease: "power1.inOut"}
                 )   
             }
             else{
@@ -104,7 +104,7 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                     x: -20,
                     opacity: 0,
                     duration: 0.25,
-                    ease: "power2.in", // Fixed ease name
+                    ease: "power1.inOut", // Fixed ease name
                     onComplete: () => {
                       searchBarRef.current.style.display = "none"; // Hide after animation
                     },
@@ -112,7 +112,12 @@ function SideBar({setSideBarWidth, sideBarWidth}){
             }
         }
     },[isSearch])
-            
+    
+    const HiddenLine = () => {
+        return(
+            <></>
+        )
+    }
           
     return(
         <>
@@ -154,7 +159,7 @@ function SideBar({setSideBarWidth, sideBarWidth}){
                     </button>
                 </div>
             </div>
-            <div className="flex justify-between" ref={divRef}>
+            <div className="flex justify-between gap-3" ref={divRef}>
                 <div className=" text-white text-xg flex-nowrap px-2 mt-2">
                 <Categories />
                 </div>
@@ -181,12 +186,19 @@ function SideBar({setSideBarWidth, sideBarWidth}){
 
                 </div>
             </div>
+            {sideBarWidth === "700px" && (
+                <div className="flex flex-row items-center text-[#d3d9d3] justify-between text-sm px-2 pt-2">
+                    <h3>Title</h3>
+                    <h3 className="relative left-15">Data added</h3>
+                    <h3>Played</h3>
+                </div>
+            )}
             <div className="w-[100%] h-[0.1%] bg-[#2c2c2c]">
             </div>
 
             <div className="flex flex-col gap-2 overflow-auto">
                 {playlists.map((playlist, i) => (
-                    <div key={i} className="flex flex-row items-center p-2 rounded hover:bg-[#232323] gap-3 text-white">
+                    <div draggable key={i} className="flex flex-row items-center p-2 rounded hover:bg-[#232323] gap-3 text-white">
                         <img width={35} src="src/assets/whiteHeart.svg" alt="playlist" />
                         <div className="flex flex-col">
                             <h1 className="text-[1.1rem]">MyPlaylist #{i}</h1>

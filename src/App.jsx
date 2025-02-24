@@ -17,7 +17,7 @@ function App() {
         {
           // side bar
         }
-        <div style={{width:sideBarWidth}} className='bg-[#121212] h-[100%] rounded-2xl flex flex-col gap-4.5 p-2 overflow-hidden'>
+        <div style={{width:sideBarWidth}} className='bg-[#121212] h-[100%] rounded-2xl flex flex-col gap-2 p-2 overflow-hidden'>
             <SideBar setSideBarWidth={setSideBarWidth} sideBarWidth={sideBarWidth} />
         </div>
         <div style={{width:`calc(100% - ${sideBarWidth})`}} className='h-[100%] flex flex-col bg-linear-to-t from-[#121212] to-[#292929] text-white px-5 rounded-2xl gap-4 overflow-scroll'>
