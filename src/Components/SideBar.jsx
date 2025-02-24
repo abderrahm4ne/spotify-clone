@@ -1,17 +1,15 @@
 import SearchBar from "./toChange/SearchBar";
 import { useEffect, useState, useRef } from "react";
 
-function SideBar(){
+function SideBar({setSideBarWidth, sideBarWidth}){
     const [isSearch , setIsSearch] = useState(true);
-
     const [playlists, setPlaylists] = useState([]);
-
-
     const [clicked, setClicked] = useState(false);
+    const [changeBackGround, setChangeBackGround] = useState(false);
 
     const playlistInputRef = useRef(null);
-
     const adderButton = useRef(null);
+    const divRef = useRef(null);
 
     const handleClickOutSide = (e) => {
         if(playlistInputRef.current && !playlistInputRef.current.contains(e.target) && !adderButton.current.contains(e.target)){
@@ -55,11 +53,42 @@ function SideBar(){
     }
 
     const handleCreatePlayList = () => {
-        
             setPlaylists([...playlists, {title : 'MyPlaylist', songs: [] }])
         }
 
+        // adjust the big div width
+        useEffect(() => {
+            const resizeObserver = new ResizeObserver(entries => {
+              for (let entry of entries) {
+                const width = entry.contentRect.width;
+                if (width <= 450) {
+                    entry.target.classList.add("flex-col");
+                    entry.target.classList.remove("flex-row");
+                    
+                } else {
+                    entry.target.classList.add("flex-row");
+                    entry.target.classList.add("flex-col");
+                      
+                }
+              }
+            });
+        
+            if (divRef.current) {
+              resizeObserver.observe(divRef.current);
+            }
+        
+            return () => {
+              if (divRef.current) {
+                resizeObserver.unobserve(divRef.current);
+              }
+            };
+          }, []);
 
+          const handleDynamicWidth = () => {
+            setSideBarWidth(sideBarWidth <= '450px' ? "700px" : "450px")
+          }
+            
+          
     return(
         <>
             <div className="flex flex-row justify-between items-center px-2 pt-2">
@@ -72,16 +101,21 @@ function SideBar(){
                     </div>
                 </button>
                 <div className="flex flex-row items-center gap-4 relative">
-                    <button ref={adderButton} onClick={() => {
-                        setClicked(!clicked)
-                    }}>
+                    <button 
+                    ref={adderButton} 
+                    onClick={() => {
+                        setClicked(clicked => ! clicked);
+                    }}
+                    
+                    className={`p-1.5 rounded-full transition-colors duration-200
+                     hover:bg-black`}
+                    >
                         <img width={30} src="src/assets/plus.svg" alt="add" />
                     </button>
                     {clicked && 
                         (
                             <div ref={playlistInputRef} className="flex flex-col w-50 bg-[#282828] text-white text-base absolute top-10 right-11 rounded-[6px] p-[4px]">
                                 <button className="p-2 hover:bg-[#494949] rounded-[6px]" onClick={() => {
-                                    setIsCreatingPlayList(true);
                                     handleCreatePlayList();
                                     
                                 }}>Create a new playlist</button>
@@ -89,20 +123,24 @@ function SideBar(){
                             </div>
                         )
                     }
-                    <button>
-                        <img width={30} src="src/assets/rightarrow.svg" alt="" />
+                    <button className={`p-1.5 rounded-full transition-colors duration-200
+                     hover:bg-black`} onClick={handleDynamicWidth}>
+                        <img width={30} src={sideBarWidth === '700px' ? 'src/assets/leftArrow.svg' : 'src/assets/rightArrow.svg '} alt="" />
                     </button>
                 </div>
             </div>
-            <div className=" text-white text-xg flex-nowrap px-2 mt-2">
+            <div className="flex justify-between" ref={divRef}>
+                <div className=" text-white text-xg flex-nowrap px-2 mt-2">
                 <Categories />
-            </div>
-            <div className="flex flex-row items-center justify-between px-2">
+                </div>
+                <div className="flex flex-row items-center justify-between px-2  gap-4">
                 <div className="flex flex-row items-center">
                     <button onClick={() => 
                         setIsSearch(prev => !prev)
-                    }>
-                        <img src="src/assets/search.svg" alt="search" className="z-1" />
+                    }   className="p-2"
+
+                    >
+                        <img src="src/assets/search.svg" alt="search" className="w-6" />
                     </button>
 
                     {<SearchBar hidden={isSearch} />}
@@ -110,12 +148,13 @@ function SideBar(){
                     
                     
                     <button >
-                        <div className="flex flex-row gap-2 text-[#d3d9d3]">
+                        <div className="flex flex-row gap-2 text-[#d3d9d3] hover:text-white">   
                             <h2>Recents</h2>
                             <img src="src/assets/recents.svg" alt=""/>
                         </div>
                     </button>
 
+                </div>
             </div>
             <div className="w-[100%] h-[0.1%] bg-[#2c2c2c]">
             </div>
